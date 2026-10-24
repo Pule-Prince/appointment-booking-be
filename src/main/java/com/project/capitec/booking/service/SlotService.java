@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+import static com.project.capitec.booking.enums.AppointmentStatus.CANCELLED;
+
 @Service
 public class SlotService {
 
@@ -38,7 +40,7 @@ public class SlotService {
 
         long bookedCount = appointmentRepository.findAll().stream()
             .filter(a -> a.getSlot() != null && a.getSlot().getId().equals(slotId))
-            .filter(a -> !a.getStatus().equals("CANCELLED"))
+            .filter(a -> !a.getStatus().equals(CANCELLED.name()))
             .count();
 
         return bookedCount < slot.getCapacity();
@@ -47,7 +49,7 @@ public class SlotService {
     public long getBookedCount(Long slotId) {
         return appointmentRepository.findAll().stream()
             .filter(a -> a.getSlot() != null && a.getSlot().getId().equals(slotId))
-            .filter(a -> !a.getStatus().equals("CANCELLED"))
+            .filter(a -> !a.getStatus().equals(CANCELLED.name()))
             .count();
     }
 

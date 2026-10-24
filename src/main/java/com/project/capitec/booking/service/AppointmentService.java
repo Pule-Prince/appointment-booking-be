@@ -25,6 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.project.capitec.booking.enums.AppointmentStatus.CANCELLED;
+import static com.project.capitec.booking.enums.AppointmentStatus.CONFIRMED;
+
 @Service
 public class AppointmentService {
 
@@ -95,8 +98,7 @@ public class AppointmentService {
         Customer customer = new Customer(
             request.getFirstName(),
             request.getLastName(),
-            request.getCellNumber(),
-            request.getCustomerType(),
+            request.getEmail(),
             request.getIsCapitecUser()
         );
         customer = customerRepository.save(customer);
@@ -117,7 +119,7 @@ public class AppointmentService {
             serviceType,
             serviceReason,
             slot,
-            "CONFIRMED"
+            CONFIRMED.name()
         );
 
         appointment = appointmentRepository.save(appointment);
@@ -140,11 +142,11 @@ public class AppointmentService {
         Appointment appointment = appointmentRepository.findByReferenceNumber(referenceNumber)
             .orElseThrow(() -> new IllegalArgumentException("Appointment not found"));
 
-        if (appointment.getStatus().equals("CANCELLED")) {
+        if (appointment.getStatus().equals(CANCELLED.name())) {
             throw new IllegalStateException("Appointment is already cancelled");
         }
 
-        appointment.setStatus("CANCELLED");
+        appointment.setStatus(CANCELLED.name());
         appointmentRepository.save(appointment);
 
         // Send cancellation email
@@ -164,8 +166,7 @@ public class AppointmentService {
             appointment.getCustomer().getId(),
             appointment.getCustomer().getFirstName(),
             appointment.getCustomer().getLastName(),
-            appointment.getCustomer().getCellNumber(),
-            appointment.getCustomer().getCustomerType(),
+            appointment.getCustomer().getEmail(),
             appointment.getCustomer().getIsCapitecUser()
         );
 

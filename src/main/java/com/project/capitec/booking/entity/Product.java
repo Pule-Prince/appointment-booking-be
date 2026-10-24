@@ -28,7 +28,7 @@ public class Product {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
     private List<ServiceType> serviceTypes;
 
     public Product() {}

@@ -7,6 +7,7 @@ import com.project.capitec.booking.dto.response.ServiceTypeResponse;
 import com.project.capitec.booking.service.ServiceCatalogueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/service-categories")
+@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {org.springframework.web.bind.annotation.RequestMethod.GET, org.springframework.web.bind.annotation.RequestMethod.POST, org.springframework.web.bind.annotation.RequestMethod.PUT, org.springframework.web.bind.annotation.RequestMethod.DELETE})
 public class ServiceCatalogueController {
 
     private final ServiceCatalogueService serviceCatalogueService;
@@ -40,6 +42,7 @@ public class ServiceCatalogueController {
 
 @RestController
 @RequestMapping("/api/v1/products")
+@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {org.springframework.web.bind.annotation.RequestMethod.GET, org.springframework.web.bind.annotation.RequestMethod.POST, org.springframework.web.bind.annotation.RequestMethod.PUT, org.springframework.web.bind.annotation.RequestMethod.DELETE})
 class ProductController {
 
     private final ServiceCatalogueService serviceCatalogueService;
@@ -58,6 +61,7 @@ class ProductController {
 
 @RestController
 @RequestMapping("/api/v1/service-types")
+@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {org.springframework.web.bind.annotation.RequestMethod.GET, org.springframework.web.bind.annotation.RequestMethod.POST, org.springframework.web.bind.annotation.RequestMethod.PUT, org.springframework.web.bind.annotation.RequestMethod.DELETE})
 class ServiceTypeController {
 
     private final ServiceCatalogueService serviceCatalogueService;

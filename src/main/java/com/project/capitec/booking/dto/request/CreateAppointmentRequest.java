@@ -14,13 +14,9 @@ public class CreateAppointmentRequest {
     @Size(max = 50, message = "Last name cannot exceed 50 characters")
     private String lastName;
 
-    @NotBlank(message = "Cell number is required")
-    @Size(max = 10, message = "Cell number cannot exceed 10 characters")
-    private String cellNumber;
-
-    @NotBlank(message = "Customer type is required")
-    @Size(max = 50, message = "Customer type cannot exceed 50 characters")
-    private String customerType;
+    @NotBlank(message = "Email is required")
+    @Size(max = 100, message = "Email cannot exceed 100 characters")
+    private String email;
 
     @NotNull(message = "isCapitecUser flag is required")
     private Boolean isCapitecUser;
@@ -35,13 +31,12 @@ public class CreateAppointmentRequest {
 
     public CreateAppointmentRequest() {}
 
-    public CreateAppointmentRequest(String firstName, String lastName, String cellNumber,
-                                   String customerType, Boolean isCapitecUser, Long serviceTypeId, Long serviceReasonId,
+    public CreateAppointmentRequest(String firstName, String lastName, String email,
+                                   Boolean isCapitecUser, Long serviceTypeId, Long serviceReasonId,
                                    Long slotId) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.cellNumber = cellNumber;
-        this.customerType = customerType;
+        this.email = email;
         this.isCapitecUser = isCapitecUser;
         this.serviceTypeId = serviceTypeId;
         this.serviceReasonId = serviceReasonId;
@@ -64,20 +59,12 @@ public class CreateAppointmentRequest {
         this.lastName = lastName;
     }
 
-    public String getCellNumber() {
-        return cellNumber;
+    public String getEmail() {
+        return email;
     }
 
-    public void setCellNumber(String cellNumber) {
-        this.cellNumber = cellNumber;
-    }
-
-    public String getCustomerType() {
-        return customerType;
-    }
-
-    public void setCustomerType(String customerType) {
-        this.customerType = customerType;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Long getServiceTypeId() {

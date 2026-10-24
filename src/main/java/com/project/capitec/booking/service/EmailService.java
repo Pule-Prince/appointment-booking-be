@@ -29,19 +29,11 @@ public class EmailService {
 
         try {
             String subject = "Appointment Confirmation - Reference: " + appointment.getReferenceNumber();
-
             String body = buildConfirmationEmail(appointment, customer);
-
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom(fromEmail);
-            message.setTo(customer.getCellNumber() + "@test.local"); // For MailHog testing
-            message.setSubject(subject);
-            message.setText(body);
-
+            SimpleMailMessage message = emailMessage(customer, subject, body);
             mailSender.send(message);
-
             logger.info("Appointment confirmation email sent to {} for reference {}",
-                customer.getCellNumber(), appointment.getReferenceNumber());
+                customer.getEmail(), appointment.getReferenceNumber());
         } catch (Exception e) {
             logger.error("Failed to send appointment confirmation email", e);
         }
@@ -51,60 +43,68 @@ public class EmailService {
 
         try {
             String subject = "Appointment Cancelled - Reference: " + appointment.getReferenceNumber();
-
             String body = buildCancellationEmail(appointment, customer);
-
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom(fromEmail);
-            message.setTo(customer.getCellNumber() + "@test.local"); // For MailHog testing
-            message.setSubject(subject);
-            message.setText(body);
-
+            SimpleMailMessage message = emailMessage(customer, subject, body);
             mailSender.send(message);
-
             logger.info("Appointment cancellation email sent to {} for reference {}",
-                customer.getCellNumber(), appointment.getReferenceNumber());
+                customer.getEmail(), appointment.getReferenceNumber());
         } catch (Exception e) {
             logger.error("Failed to send appointment cancellation email", e);
         }
     }
 
+    private SimpleMailMessage emailMessage(Customer customer, String subject, String body) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(fromEmail);
+        message.setTo(customer.getEmail() + "@test.local");
+        message.setSubject(subject);
+        message.setText(body);
+        return message;
+    }
+
     private String buildConfirmationEmail(Appointment appointment, Customer customer) {
         return String.format(
-            "Dear %s %s,\n\n" +
-            "Your appointment has been confirmed.\n\n" +
-            "Appointment Details:\n" +
-            "Reference Number: %s\n" +
-            "Service: %s\n" +
-            "Branch: %s\n" +
-            "Date/Time: %s to %s\n" +
-            "Customer Type: %s\n\n" +
-            "Please keep your reference number for future enquiries.\n\n" +
-            "Best regards,\n" +
-            "Capitec Bank",
+            """
+            Dear %s %s,
+            
+            Your appointment has been confirmed.
+            
+            Appointment Details:
+            Reference Number: %s
+            Service: %s
+            Branch: %s
+            Date/Time: %s to %s
+            Please keep your reference number for future enquiries.
+            
+            Best regards,
+            Capitec Bank""",
             customer.getFirstName(),
             customer.getLastName(),
             appointment.getReferenceNumber(),
             appointment.getServiceType().getName(),
             appointment.getSlot().getBranch().getCode(),
             appointment.getSlot().getStartTime(),
-            appointment.getSlot().getEndTime(),
-            customer.getCustomerType()
+            appointment.getSlot().getEndTime()
         );
     }
 
     private String buildCancellationEmail(Appointment appointment, Customer customer) {
         return String.format(
-            "Dear %s %s,\n\n" +
-            "Your appointment has been cancelled.\n\n" +
-            "Cancelled Appointment Details:\n" +
-            "Reference Number: %s\n" +
-            "Service: %s\n" +
-            "Branch: %s\n" +
-            "Date/Time: %s to %s\n\n" +
-            "If you need to reschedule, please book a new appointment online or visit your nearest branch.\n\n" +
-            "Best regards,\n" +
-            "Capitec Bank",
+            """
+            Dear %s %s,
+            
+            Your appointment has been cancelled.
+            
+            Cancelled Appointment Details:
+            Reference Number: %s
+            Service: %s
+            Branch: %s
+            Date/Time: %s to %s
+            
+            If you need to reschedule, please book a new appointment online or visit your nearest branch.
+            
+            Best regards,
+            Capitec Bank""",
             customer.getFirstName(),
             customer.getLastName(),
             appointment.getReferenceNumber(),

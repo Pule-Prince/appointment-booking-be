@@ -29,14 +29,10 @@ public class Customer {
     @NotBlank(message = "Last name is required")
     private String lastName;
 
-    @Column(name = "cell_number", nullable = false, length = 10)
-    @NotBlank(message = "Cell number is required")
-    @Size(max = 10, message = "Cell number cannot exceed 10 characters")
-    private String cellNumber;
-
-    @Column(name = "customer_type", nullable = false, length = 50)
-    @NotBlank(message = "Customer type is required")
-    private String customerType;
+    @Column(name = "email", nullable = false, length = 100)
+    @NotBlank(message = "Email is required")
+    @Size(max = 100, message = "Email cannot exceed 100 characters")
+    private String email;
 
     @Column(name = "is_capitec_user", nullable = false)
     private Boolean isCapitecUser = false;
@@ -46,19 +42,10 @@ public class Customer {
 
     public Customer() {}
 
-    public Customer(String firstName, String lastName, String cellNumber, String customerType) {
+    public Customer(String firstName, String lastName, String email, Boolean isCapitecUser) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.cellNumber = cellNumber;
-        this.customerType = customerType;
-        this.isCapitecUser = false;
-    }
-
-    public Customer(String firstName, String lastName, String cellNumber, String customerType, Boolean isCapitecUser) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.cellNumber = cellNumber;
-        this.customerType = customerType;
+        this.email = email;
         this.isCapitecUser = isCapitecUser;
     }
 
@@ -86,20 +73,12 @@ public class Customer {
         this.lastName = lastName;
     }
 
-    public String getCellNumber() {
-        return cellNumber;
+    public String getEmail() {
+        return email;
     }
 
-    public void setCellNumber(String cellNumber) {
-        this.cellNumber = cellNumber;
-    }
-
-    public String getCustomerType() {
-        return customerType;
-    }
-
-    public void setCustomerType(String customerType) {
-        this.customerType = customerType;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public List<Appointment> getAppointments() {

@@ -60,7 +60,7 @@ public class ServiceCatalogueService {
     }
 
     public List<ServiceTypeResponse> getServiceTypesByProduct(Long productId) {
-        Product product = productRepository.findById(productId)
+        Product product = productRepository.findByIdWithServiceTypes(productId)
             .orElseThrow(() -> new IllegalArgumentException("Product not found"));
 
         return product.getServiceTypes().stream()

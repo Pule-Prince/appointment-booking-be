@@ -28,7 +28,7 @@ public class ServiceType {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "serviceType", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "serviceType", fetch = FetchType.EAGER)
     private List<ServiceReason> serviceReasons;
 
     public ServiceType() {}
