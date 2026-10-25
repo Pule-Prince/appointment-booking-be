@@ -87,6 +87,8 @@ WHERE NOT EXISTS (
 );
 
 -- 2. INSERT SERVICE TYPE
+DELETE FROM service_type;
+
 INSERT INTO service_type (product_id, name)
 SELECT p.product_id, v.service_type_name
 FROM (
@@ -118,27 +120,7 @@ WHERE NOT EXISTS (
       AND st.name = v.service_type_name
 );
 
--- 4. SERVICE REASONS - Using explicit JOINs
-INSERT INTO service_reason (service_type_id, description)
-SELECT st.service_type_id, v.reason_name
-FROM (
-  VALUES
-    ('Life Cover', 'Claim Enquiry', 'Accidental Death'),
-    ('Life Cover', 'Claim Enquiry', 'Natural Death'),
-    ('Funeral Cover', 'Policy Enquiry', 'Debit Order Not Taking Place'),
-    ('Personal Loan', 'New Application', 'Home Improvements'),
-    ('Personal Loan', 'New Application', 'Vehicle'),
-    ('Personal Loan', 'New Application', 'Consolidation'),
-    ('Personal Loan', 'New Application', 'Education'),
-    ('Savings Plan', 'Open Savings Plan', 'Open Savings Plan')
-) AS v(product_name, service_type_name, reason_name)
-INNER JOIN product p ON p.name = v.product_name
-INNER JOIN service_type st ON st.product_id = p.product_id AND st.name = v.service_type_name
-WHERE NOT EXISTS (
-    SELECT 1 FROM service_reason sr
-    WHERE sr.service_type_id = st.service_type_id
-      AND sr.description = v.reason_name
-);
+DELETE FROM service_reasons
 
 -- 5. APPOINTMENT SLOTS
 INSERT INTO appointment_slot

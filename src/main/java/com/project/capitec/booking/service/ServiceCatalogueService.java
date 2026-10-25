@@ -94,11 +94,7 @@ public class ServiceCatalogueService {
                 .collect(Collectors.toList())
             : List.of();
 
-        return new ServiceCategoryResponse(
-            category.getId(),
-            category.getName(),
-            products
-        );
+        return new ServiceCategoryResponse(category.getId(), category.getName(), products);
     }
 
     private ProductResponse mapProductToResponse(Product product) {
@@ -108,11 +104,7 @@ public class ServiceCatalogueService {
                 .collect(Collectors.toList())
             : List.of();
 
-        return new ProductResponse(
-            product.getId(),
-            product.getName(),
-            serviceTypes
-        );
+        return new ProductResponse(product.getId(), product.getName(), serviceTypes);
     }
 
     private ServiceTypeResponse mapServiceTypeToResponse(ServiceType serviceType) {
@@ -122,10 +114,6 @@ public class ServiceCatalogueService {
                 .collect(Collectors.toList())
             : List.of();
 
-        return new ServiceTypeResponse(
-            serviceType.getId(),
-            serviceType.getName(),
-            reasons
-        );
+        return new ServiceTypeResponse(serviceType.getId(), serviceType.getName(), reasons);
     }
 }

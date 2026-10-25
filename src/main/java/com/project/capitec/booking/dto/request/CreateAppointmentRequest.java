@@ -24,7 +24,9 @@ public class CreateAppointmentRequest {
     @NotNull(message = "Service type ID is required")
     private Long serviceTypeId;
 
-    private Long serviceReasonId;
+    @NotBlank(message = "Service reason is required")
+    @Size(max = 200, message = "Service reason cannot exceed 200 characters")
+    private String serviceReason;
 
     @NotNull(message = "Appointment slot ID is required")
     private Long slotId;
@@ -32,14 +34,14 @@ public class CreateAppointmentRequest {
     public CreateAppointmentRequest() {}
 
     public CreateAppointmentRequest(String firstName, String lastName, String email,
-                                   Boolean isCapitecUser, Long serviceTypeId, Long serviceReasonId,
+                                   Boolean isCapitecUser, Long serviceTypeId, String serviceReason,
                                    Long slotId) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.isCapitecUser = isCapitecUser;
         this.serviceTypeId = serviceTypeId;
-        this.serviceReasonId = serviceReasonId;
+        this.serviceReason = serviceReason;
         this.slotId = slotId;
     }
 
@@ -75,12 +77,12 @@ public class CreateAppointmentRequest {
         this.serviceTypeId = serviceTypeId;
     }
 
-    public Long getServiceReasonId() {
-        return serviceReasonId;
+    public String getServiceReason() {
+        return serviceReason;
     }
 
-    public void setServiceReasonId(Long serviceReasonId) {
-        this.serviceReasonId = serviceReasonId;
+    public void setServiceReason(String serviceReason) {
+        this.serviceReason = serviceReason;
     }
 
     public Long getSlotId() {

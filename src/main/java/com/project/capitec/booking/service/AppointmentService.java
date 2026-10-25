@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,18 +69,9 @@ public class AppointmentService {
 
     @Transactional
     public AppointmentResponse createAppointment(CreateAppointmentRequest request) {
-        // 1. Validate service reason belongs to service type
+        // 1. Validate service type
         ServiceType serviceType = serviceTypeRepository.findById(request.getServiceTypeId())
             .orElseThrow(() -> new IllegalArgumentException("Service type not found"));
-
-        if (request.getServiceReasonId() != null) {
-            ServiceReason serviceReason = serviceReasonRepository.findById(request.getServiceReasonId())
-                .orElseThrow(() -> new IllegalArgumentException("Service reason not found"));
-
-            if (!serviceReason.getServiceType().getId().equals(serviceType.getId())) {
-                throw new IllegalArgumentException("Service reason does not belong to the selected service type");
-            }
-        }
 
         // 2. Validate slot with pessimistic locking
         AppointmentSlot slot = slotRepository.findByIdWithLock(request.getSlotId())
@@ -103,11 +95,9 @@ public class AppointmentService {
         );
         customer = customerRepository.save(customer);
 
-        // 5. Fetch service reason if provided
-        ServiceReason serviceReason = null;
-        if (request.getServiceReasonId() != null) {
-            serviceReason = serviceReasonRepository.findById(request.getServiceReasonId()).orElse(null);
-        }
+        // 5. Create service reason from user input
+        ServiceReason serviceReason = new ServiceReason(null, serviceType, request.getServiceReason());
+        serviceReason = serviceReasonRepository.save(serviceReason);
 
         // 6. Generate unique reference number
         String referenceNumber = referenceNumberGenerator.generate();
@@ -135,6 +125,15 @@ public class AppointmentService {
         Appointment appointment = appointmentRepository.findByReferenceNumber(referenceNumber)
             .orElseThrow(() -> new IllegalArgumentException("Appointment not found"));
         return mapToAppointmentResponse(appointment);
+    }
+
+    public List<AppointmentResponse> getAppointmentsByDate(LocalDate date) {
+        if (date == null) {
+            date = LocalDate.now();
+        }
+        return appointmentRepository.findAppointmentsByDate(date).stream()
+            .map(this::mapToAppointmentResponse)
+            .collect(Collectors.toList());
     }
 
     @Transactional

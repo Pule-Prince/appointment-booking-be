@@ -10,6 +10,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import static com.project.capitec.booking.utils.DateUtils.formatDateTime;
+
 @Service
 public class EmailService {
 
@@ -56,62 +58,64 @@ public class EmailService {
     private SimpleMailMessage emailMessage(Customer customer, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(fromEmail);
-        message.setTo(customer.getEmail() + "@test.local");
+        message.setTo(customer.getEmail());
         message.setSubject(subject);
         message.setText(body);
         return message;
     }
 
     private String buildConfirmationEmail(Appointment appointment, Customer customer) {
+        String formattedDateTime = formatDateTime(appointment.getSlot().getStartTime(), appointment.getSlot().getEndTime());
+
         return String.format(
             """
             Dear %s %s,
-            
+
             Your appointment has been confirmed.
-            
+
             Appointment Details:
             Reference Number: %s
             Service: %s
             Branch: %s
-            Date/Time: %s to %s
+            Date/Time: %s
             Please keep your reference number for future enquiries.
-            
+
             Best regards,
             Capitec Bank""",
             customer.getFirstName(),
             customer.getLastName(),
             appointment.getReferenceNumber(),
             appointment.getServiceType().getName(),
-            appointment.getSlot().getBranch().getCode(),
-            appointment.getSlot().getStartTime(),
-            appointment.getSlot().getEndTime()
+            appointment.getSlot().getBranch().getAddress().getAddressLine(),
+            formattedDateTime
         );
     }
 
     private String buildCancellationEmail(Appointment appointment, Customer customer) {
+        String formattedDateTime = formatDateTime(appointment.getSlot().getStartTime(), appointment.getSlot().getEndTime());
+
         return String.format(
             """
             Dear %s %s,
-            
+
             Your appointment has been cancelled.
-            
+
             Cancelled Appointment Details:
             Reference Number: %s
             Service: %s
             Branch: %s
-            Date/Time: %s to %s
-            
+            Date/Time: %s
+
             If you need to reschedule, please book a new appointment online or visit your nearest branch.
-            
+
             Best regards,
             Capitec Bank""",
             customer.getFirstName(),
             customer.getLastName(),
             appointment.getReferenceNumber(),
             appointment.getServiceType().getName(),
-            appointment.getSlot().getBranch().getCode(),
-            appointment.getSlot().getStartTime(),
-            appointment.getSlot().getEndTime()
+            appointment.getSlot().getBranch().getAddress().getAddressLine(),
+            formattedDateTime
         );
     }
 }
