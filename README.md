@@ -119,5 +119,8 @@ src/main/resources/
 Separate Angular 19 repository. See Frontend README.md for setup.
 
 ## Diagrams
-<img width="1187" height="2127" alt="Capitec Appointment Booking - Sequence Diagram" src="https://github.com/user-attachments/assets/272b8a0c-7a92-42ea-9639-568f50bd7084" />
+<img width="1187" height="1500" alt="Capitec Appointment Booking - Sequence Diagram" src="https://github.com/user-attachments/assets/272b8a0c-7a92-42ea-9639-568f50bd7084" />
+
+<img width="1432" height="1362" alt="ERD drawio" src="https://github.com/user-attachments/assets/26c04d9e-93f1-4fd7-a808-a73d13cd0a1b" />
+
 
