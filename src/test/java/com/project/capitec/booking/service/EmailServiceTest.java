@@ -40,7 +40,7 @@ class EmailServiceTest {
     @BeforeEach
     void setUp() {
         // Create mock customer
-        customer = new Customer("John", "Doe", "john@example.com", true);
+        customer = new Customer("John", "Doe", "john@gmail.com", true);
         customer.setId(1L);
 
         // Create mock service type
