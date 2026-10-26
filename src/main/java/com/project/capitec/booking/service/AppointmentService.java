@@ -1,5 +1,6 @@
 package com.project.capitec.booking.service;
 
+import com.project.capitec.booking.builder.AppointmentBuilder;
 import com.project.capitec.booking.dto.request.CreateAppointmentRequest;
 import com.project.capitec.booking.dto.response.AppointmentResponse;
 import com.project.capitec.booking.dto.response.AppointmentSlotResponse;
@@ -113,42 +114,26 @@ public class AppointmentService {
             throw new IllegalStateException("Appointment slot has no available capacity");
         }
 
-        // Create or fetch customer
-        Customer customer = new Customer(
-            request.getFirstName(),
-            request.getLastName(),
-            request.getEmail(),
-            request.getIsCapitecUser()
-        );
-        customer = customerRepository.save(customer);
-
-        // Create service reason from user input
-        ServiceReason serviceReason = new ServiceReason(serviceType, request.getServiceReason());
-        serviceReason = serviceReasonRepository.save(serviceReason);
-
-        // Generate unique reference number
-        String referenceNumber = referenceNumberGenerator.generate();
-
-        // Create appointment
-        Appointment appointment = new Appointment(
-            referenceNumber,
-            customer,
-            serviceType,
-            serviceReason,
-            slot,
-            CONFIRMED.name()
-        );
-
-        appointment = appointmentRepository.save(appointment);
+        // Build and create appointment
+        Appointment appointment = new AppointmentBuilder(customerRepository, serviceReasonRepository, appointmentRepository, referenceNumberGenerator)
+            .withCustomerDetails(
+                request.getFirstName(),
+                request.getLastName(),
+                request.getEmail(),
+                request.getIsCapitecUser()
+            )
+            .withServiceType(serviceType)
+            .withServiceReason(request.getServiceReason())
+            .withSlot(slot)
+            .build();
 
         // Increment booked_count on the slot
         slot.setBookedCount(slot.getBookedCount() + 1);
         slotRepository.save(slot);
 
         // Send confirmation email
-        notification.sendAppointmentConfirmation(appointment, customer);
+        notification.sendAppointmentConfirmation(appointment, appointment.getCustomer());
 
-        // 10. Convert to response
         return mapToAppointmentResponse(appointment);
     }
 
