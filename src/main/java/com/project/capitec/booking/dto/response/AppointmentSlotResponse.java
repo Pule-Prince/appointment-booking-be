@@ -3,7 +3,7 @@ package com.project.capitec.booking.dto.response;
 import java.time.LocalDateTime;
 
 public class AppointmentSlotResponse {
-    private Long slotId;
+    private Long timeSlotId;
     private BranchResponse branch;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
@@ -12,9 +12,9 @@ public class AppointmentSlotResponse {
 
     public AppointmentSlotResponse() {}
 
-    public AppointmentSlotResponse(Long slotId, BranchResponse branch, LocalDateTime startTime,
+    public AppointmentSlotResponse(Long timeSlotId, BranchResponse branch, LocalDateTime startTime,
                                    LocalDateTime endTime, Long capacity, Long bookedCount) {
-        this.slotId = slotId;
+        this.timeSlotId = timeSlotId;
         this.branch = branch;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -22,8 +22,8 @@ public class AppointmentSlotResponse {
         this.bookedCount = bookedCount;
     }
 
-    public Long getSlotId() { return slotId; }
-    public void setSlotId(Long slotId) { this.slotId = slotId; }
+    public Long getTimeSlotId() { return timeSlotId; }
+    public void setTimeSlotId(Long timeSlotId) { this.timeSlotId = timeSlotId; }
     public BranchResponse getBranch() { return branch; }
     public void setBranch(BranchResponse branch) { this.branch = branch; }
     public LocalDateTime getStartTime() { return startTime; }

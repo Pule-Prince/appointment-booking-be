@@ -15,8 +15,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     Optional<Appointment> findByReferenceNumber(String referenceNumber);
 
-    List<Appointment> findByCustomerId(Long customerId);
-
-    @Query("SELECT a FROM Appointment a WHERE CAST(a.slot.startTime AS date) = :date ORDER BY a.slot.startTime ASC")
+    @Query("SELECT a FROM Appointment a WHERE a.slot.appointmentDate = :date ORDER BY a.slot.appointmentDate ASC")
     List<Appointment> findAppointmentsByDate(@Param("date") LocalDate date);
 }

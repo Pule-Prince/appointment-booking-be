@@ -28,21 +28,29 @@ public class CreateAppointmentRequest {
     @Size(max = 200, message = "Service reason cannot exceed 200 characters")
     private String serviceReason;
 
-    @NotNull(message = "Appointment slot ID is required")
-    private Long slotId;
+    @NotNull(message = "Branch ID is required")
+    private Long branchId;
+
+    @NotNull(message = "Appointment date is required")
+    private String appointmentDate;
+
+    @NotNull(message = "Time slot ID is required")
+    private Long timeSlotId;
 
     public CreateAppointmentRequest() {}
 
     public CreateAppointmentRequest(String firstName, String lastName, String email,
                                    Boolean isCapitecUser, Long serviceTypeId, String serviceReason,
-                                   Long slotId) {
+                                   Long branchId, String appointmentDate, Long timeSlotId) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.isCapitecUser = isCapitecUser;
         this.serviceTypeId = serviceTypeId;
         this.serviceReason = serviceReason;
-        this.slotId = slotId;
+        this.branchId = branchId;
+        this.appointmentDate = appointmentDate;
+        this.timeSlotId = timeSlotId;
     }
 
     public String getFirstName() {
@@ -85,12 +93,28 @@ public class CreateAppointmentRequest {
         this.serviceReason = serviceReason;
     }
 
-    public Long getSlotId() {
-        return slotId;
+    public Long getBranchId() {
+        return branchId;
     }
 
-    public void setSlotId(Long slotId) {
-        this.slotId = slotId;
+    public void setBranchId(Long branchId) {
+        this.branchId = branchId;
+    }
+
+    public String getAppointmentDate() {
+        return appointmentDate;
+    }
+
+    public void setAppointmentDate(String appointmentDate) {
+        this.appointmentDate = appointmentDate;
+    }
+
+    public Long getTimeSlotId() {
+        return timeSlotId;
+    }
+
+    public void setTimeSlotId(Long timeSlotId) {
+        this.timeSlotId = timeSlotId;
     }
 
     public Boolean getIsCapitecUser() {

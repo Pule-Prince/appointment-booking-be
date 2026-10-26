@@ -25,25 +25,15 @@ public class SlotService {
 
     public boolean isSlotValid(Long slotId) {
         AppointmentSlot slot = slotRepository.findById(slotId).orElse(null);
-        if (slot == null) {
-            return false;
-        }
-        // Check if slot is in the future
-        return !slot.getStartTime().isBefore(LocalDateTime.now());
+        return slot != null && !slot.getSlotStartTime().isBefore(LocalDateTime.now());
     }
 
     public boolean isSlotAvailable(Long slotId) {
         AppointmentSlot slot = slotRepository.findById(slotId).orElse(null);
-        if (slot == null || !isSlotValid(slotId)) {
+        if (!isSlotValid(slotId)) {
             return false;
         }
-
-        long bookedCount = appointmentRepository.findAll().stream()
-            .filter(a -> a.getSlot() != null && a.getSlot().getId().equals(slotId))
-            .filter(a -> !a.getStatus().equals(CANCELLED.name()))
-            .count();
-
-        return bookedCount < slot.getCapacity();
+        return getBookedCount(slotId) < slot.getTimeSlot().getCapacity();
     }
 
     public long getBookedCount(Long slotId) {
@@ -51,13 +41,5 @@ public class SlotService {
             .filter(a -> a.getSlot() != null && a.getSlot().getId().equals(slotId))
             .filter(a -> !a.getStatus().equals(CANCELLED.name()))
             .count();
-    }
-
-    public long getAvailableCapacity(Long slotId) {
-        AppointmentSlot slot = slotRepository.findById(slotId).orElse(null);
-        if (slot == null) {
-            return 0;
-        }
-        return Math.max(0, slot.getCapacity() - getBookedCount(slotId));
     }
 }

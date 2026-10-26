@@ -52,7 +52,7 @@ DELETE FROM document_requirement;
 DELETE FROM service_reason;
 DELETE FROM service_type;
 DELETE FROM appointment_slot;
-DELETE FROM service_type;
+DELETE FROM appointment_time_slot;
 DELETE FROM product;
 DELETE FROM service_category;
 
@@ -96,7 +96,7 @@ WHERE NOT EXISTS (
       AND LOWER(p.name) = LOWER(v.product_name)
 );
 
--- 2. INSERT SERVICE TYPE
+-- 3. INSERT SERVICE TYPE
 INSERT INTO service_type (product_id, name)
 SELECT p.product_id, v.service_type_name
 FROM (
@@ -128,6 +128,7 @@ WHERE NOT EXISTS (
       AND st.name = v.service_type_name
 );
 
+-- 4. INSERT DOCUMENT REQUIREMENTS
 INSERT INTO document_requirement (service_type_id, document_name, description)
 SELECT st.service_type_id, v.document_name, v.description
 FROM (
@@ -172,39 +173,25 @@ WHERE NOT EXISTS (
       AND dr.document_name = v.document_name
 );
 
--- 5. APPOINTMENT SLOTS
-INSERT INTO appointment_slot
-(branch_id, start_time, end_time, capacity)
-SELECT
-    b.branch_id,
-    (d.slot_date + t.slot_time)::timestamp,
-    (d.slot_date + t.slot_time + INTERVAL '30 minutes')::timestamp,
-    5
-FROM branch b
-         CROSS JOIN generate_series(
-                CURRENT_DATE,
-                CURRENT_DATE + 14,
-                INTERVAL '1 day'
-                    ) AS d(slot_date)
-         CROSS JOIN (
+-- 5. INSERT APPOINTMENT TIME SLOTS (static time slots)
+INSERT INTO appointment_time_slot (start_time, end_time, capacity)
+SELECT v.start_time, v.end_time, 5
+FROM (
     VALUES
-        (TIME '09:00'),
-        (TIME '10:00'),
-        (TIME '11:00'),
-        (TIME '12:00'),
-        (TIME '14:00'),
-        (TIME '15:00'),
-        (TIME '16:00'),
-        (TIME '17:00')
-) AS t(slot_time)
-WHERE b.active = TRUE
-  AND EXTRACT(ISODOW FROM d.slot_date) BETWEEN 1 AND 5
-  AND NOT EXISTS (
+        (TIME '09:00', TIME '09:30'),
+        (TIME '10:00', TIME '10:30'),
+        (TIME '11:00', TIME '11:30'),
+        (TIME '12:00', TIME '12:30'),
+        (TIME '14:00', TIME '14:30'),
+        (TIME '15:00', TIME '15:30'),
+        (TIME '16:00', TIME '16:30'),
+        (TIME '17:00', TIME '17:30')
+) AS v(start_time, end_time)
+WHERE NOT EXISTS (
     SELECT 1
-    FROM appointment_slot existing
-    WHERE existing.branch_id = b.branch_id
-      AND existing.start_time =
-          (d.slot_date + t.slot_time)::timestamp
+    FROM appointment_time_slot existing
+    WHERE existing.start_time = v.start_time
+      AND existing.end_time = v.end_time
 );
 
 COMMIT;

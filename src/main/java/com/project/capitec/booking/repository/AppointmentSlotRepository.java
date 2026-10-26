@@ -8,16 +8,16 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import jakarta.persistence.LockModeType;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface AppointmentSlotRepository extends JpaRepository<AppointmentSlot, Long> {
 
-    @Query("SELECT s FROM AppointmentSlot s WHERE s.branch.id = :branchId AND s.startTime >= :startTime AND s.endTime <= :endTime")
-    List<AppointmentSlot> findByBranchIdAndStartTimeGreaterThanEqualAndEndTimeLessThanEqual(
-            @Param("branchId") Long branchId, @Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime);
+    @Query("SELECT s FROM AppointmentSlot s WHERE s.branch.id = :branchId AND s.appointmentDate = :date AND s.timeSlot.id = :timeSlotId")
+    Optional<AppointmentSlot> findByBranchIdAndDateAndTimeSlotId(
+            @Param("branchId") Long branchId, @Param("date") LocalDate date, @Param("timeSlotId") Long timeSlotId);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT s FROM AppointmentSlot s WHERE s.id = :id")

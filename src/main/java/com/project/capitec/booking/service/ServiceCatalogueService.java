@@ -5,7 +5,6 @@ import com.project.capitec.booking.dto.response.ProductResponse;
 import com.project.capitec.booking.dto.response.ServiceCategoryResponse;
 import com.project.capitec.booking.dto.response.ServiceReasonResponse;
 import com.project.capitec.booking.dto.response.ServiceTypeResponse;
-import com.project.capitec.booking.entity.DocumentRequirement;
 import com.project.capitec.booking.entity.Product;
 import com.project.capitec.booking.entity.ServiceCategory;
 import com.project.capitec.booking.entity.ServiceType;
@@ -44,12 +43,6 @@ public class ServiceCatalogueService {
             .collect(Collectors.toList());
     }
 
-    public ServiceCategoryResponse getCategoryById(Long categoryId) {
-        ServiceCategory category = categoryRepository.findById(categoryId)
-            .orElseThrow(() -> new IllegalArgumentException("Service category not found"));
-        return mapCategoryToResponse(category);
-    }
-
     public List<ProductResponse> getProductsByCategory(Long categoryId) {
         ServiceCategory category = categoryRepository.findById(categoryId)
             .orElseThrow(() -> new IllegalArgumentException("Service category not found"));
@@ -57,12 +50,6 @@ public class ServiceCatalogueService {
         return category.getProducts().stream()
             .map(this::mapProductToResponse)
             .collect(Collectors.toList());
-    }
-
-    public ProductResponse getProductById(Long productId) {
-        Product product = productRepository.findById(productId)
-            .orElseThrow(() -> new IllegalArgumentException("Product not found"));
-        return mapProductToResponse(product);
     }
 
     public List<ServiceTypeResponse> getServiceTypesByProduct(Long productId) {
@@ -74,29 +61,15 @@ public class ServiceCatalogueService {
             .collect(Collectors.toList());
     }
 
-    public ServiceTypeResponse getServiceTypeById(Long serviceTypeId) {
-        ServiceType serviceType = serviceTypeRepository.findById(serviceTypeId)
-            .orElseThrow(() -> new IllegalArgumentException("Service type not found"));
-        return mapServiceTypeToResponse(serviceType);
-    }
-
     public List<ServiceReasonResponse> getServiceReasonsByType(Long serviceTypeId) {
         ServiceType serviceType = serviceTypeRepository.findById(serviceTypeId)
             .orElseThrow(() -> new IllegalArgumentException("Service type not found"));
-
-        if (serviceType.getServiceReasons() == null || serviceType.getServiceReasons().isEmpty()) {
-            return List.of();
-        }
-
         return serviceType.getServiceReasons().stream()
             .map(reason -> new ServiceReasonResponse(reason.getId(), reason.getDescription()))
             .collect(Collectors.toList());
     }
 
     public List<DocumentRequirementResponse> getDocumentRequirementsByServiceType(Long serviceTypeId) {
-        ServiceType serviceType = serviceTypeRepository.findById(serviceTypeId)
-            .orElseThrow(() -> new IllegalArgumentException("Service type not found"));
-
         return documentRequirementRepository.findByServiceTypeId(serviceTypeId).stream()
             .map(doc -> new DocumentRequirementResponse(doc.getId(), doc.getDocumentName(), doc.getDescription()))
             .collect(Collectors.toList());

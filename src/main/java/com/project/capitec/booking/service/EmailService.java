@@ -2,6 +2,7 @@ package com.project.capitec.booking.service;
 
 import com.project.capitec.booking.entity.Appointment;
 import com.project.capitec.booking.entity.Customer;
+import com.project.capitec.booking.interfaces.Notification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 import static com.project.capitec.booking.utils.DateUtils.formatDateTime;
 
 @Service
-public class EmailService {
+public class EmailService implements Notification {
 
     private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
 
@@ -27,11 +28,12 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
+    @Override
     public void sendAppointmentConfirmation(Appointment appointment, Customer customer) {
 
         try {
             String subject = "Appointment Confirmation - Reference: " + appointment.getReferenceNumber();
-            String body = buildConfirmationEmail(appointment, customer);
+            String body = buildConfirmationMessage(appointment, customer);
             SimpleMailMessage message = emailMessage(customer, subject, body);
             mailSender.send(message);
             logger.info("Appointment confirmation email sent to {} for reference {}",
@@ -41,11 +43,12 @@ public class EmailService {
         }
     }
 
+    @Override
     public void sendAppointmentCancellation(Appointment appointment, Customer customer) {
 
         try {
             String subject = "Appointment Cancelled - Reference: " + appointment.getReferenceNumber();
-            String body = buildCancellationEmail(appointment, customer);
+            String body = buildCancellationMessage(appointment, customer);
             SimpleMailMessage message = emailMessage(customer, subject, body);
             mailSender.send(message);
             logger.info("Appointment cancellation email sent to {} for reference {}",
@@ -64,8 +67,9 @@ public class EmailService {
         return message;
     }
 
-    private String buildConfirmationEmail(Appointment appointment, Customer customer) {
-        String formattedDateTime = formatDateTime(appointment.getSlot().getStartTime(), appointment.getSlot().getEndTime());
+    @Override
+    public String buildConfirmationMessage(Appointment appointment, Customer customer) {
+        String formattedDateTime = formatDateTime(appointment.getSlot().getSlotStartTime(), appointment.getSlot().getSlotEndTime());
 
         return String.format(
             """
@@ -91,8 +95,9 @@ public class EmailService {
         );
     }
 
-    private String buildCancellationEmail(Appointment appointment, Customer customer) {
-        String formattedDateTime = formatDateTime(appointment.getSlot().getStartTime(), appointment.getSlot().getEndTime());
+    @Override
+    public String buildCancellationMessage(Appointment appointment, Customer customer) {
+        String formattedDateTime = formatDateTime(appointment.getSlot().getSlotStartTime(), appointment.getSlot().getSlotEndTime());
 
         return String.format(
             """
