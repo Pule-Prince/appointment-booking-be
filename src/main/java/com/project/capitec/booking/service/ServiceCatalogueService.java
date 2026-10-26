@@ -1,12 +1,15 @@
 package com.project.capitec.booking.service;
 
+import com.project.capitec.booking.dto.response.DocumentRequirementResponse;
 import com.project.capitec.booking.dto.response.ProductResponse;
 import com.project.capitec.booking.dto.response.ServiceCategoryResponse;
 import com.project.capitec.booking.dto.response.ServiceReasonResponse;
 import com.project.capitec.booking.dto.response.ServiceTypeResponse;
+import com.project.capitec.booking.entity.DocumentRequirement;
 import com.project.capitec.booking.entity.Product;
 import com.project.capitec.booking.entity.ServiceCategory;
 import com.project.capitec.booking.entity.ServiceType;
+import com.project.capitec.booking.repository.DocumentRequirementRepository;
 import com.project.capitec.booking.repository.ProductRepository;
 import com.project.capitec.booking.repository.ServiceCategoryRepository;
 import com.project.capitec.booking.repository.ServiceTypeRepository;
@@ -25,11 +28,14 @@ public class ServiceCatalogueService {
 
     private final ServiceTypeRepository serviceTypeRepository;
 
+    private final DocumentRequirementRepository documentRequirementRepository;
+
     @Autowired
-    public ServiceCatalogueService(ServiceCategoryRepository categoryRepository, ProductRepository productRepository, ServiceTypeRepository serviceTypeRepository) {
+    public ServiceCatalogueService(ServiceCategoryRepository categoryRepository, ProductRepository productRepository, ServiceTypeRepository serviceTypeRepository, DocumentRequirementRepository documentRequirementRepository) {
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
         this.serviceTypeRepository = serviceTypeRepository;
+        this.documentRequirementRepository = documentRequirementRepository;
     }
 
     public List<ServiceCategoryResponse> getAllCategories() {
@@ -84,6 +90,15 @@ public class ServiceCatalogueService {
 
         return serviceType.getServiceReasons().stream()
             .map(reason -> new ServiceReasonResponse(reason.getId(), reason.getDescription()))
+            .collect(Collectors.toList());
+    }
+
+    public List<DocumentRequirementResponse> getDocumentRequirementsByServiceType(Long serviceTypeId) {
+        ServiceType serviceType = serviceTypeRepository.findById(serviceTypeId)
+            .orElseThrow(() -> new IllegalArgumentException("Service type not found"));
+
+        return documentRequirementRepository.findByServiceTypeId(serviceTypeId).stream()
+            .map(doc -> new DocumentRequirementResponse(doc.getId(), doc.getDocumentName(), doc.getDescription()))
             .collect(Collectors.toList());
     }
 

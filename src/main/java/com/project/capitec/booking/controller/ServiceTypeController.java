@@ -1,5 +1,6 @@
 package com.project.capitec.booking.controller;
 
+import com.project.capitec.booking.dto.response.DocumentRequirementResponse;
 import com.project.capitec.booking.dto.response.ServiceReasonResponse;
 import com.project.capitec.booking.service.ServiceCatalogueService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,5 +30,11 @@ public class ServiceTypeController {
     public ResponseEntity<List<ServiceReasonResponse>> getServiceReasons(@PathVariable Long serviceTypeId) {
         List<ServiceReasonResponse> reasons = serviceCatalogueService.getServiceReasonsByType(serviceTypeId);
         return ResponseEntity.ok(reasons);
+    }
+
+    @GetMapping("/{serviceTypeId}/documents")
+    public ResponseEntity<List<DocumentRequirementResponse>> getDocumentRequirements(@PathVariable Long serviceTypeId) {
+        List<DocumentRequirementResponse> documents = serviceCatalogueService.getDocumentRequirementsByServiceType(serviceTypeId);
+        return ResponseEntity.ok(documents);
     }
 }

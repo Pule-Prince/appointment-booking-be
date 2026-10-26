@@ -46,6 +46,16 @@ WHERE NOT EXISTS (
     WHERE b.code = s.code
 );
 
+-- Clean up in dependency order (before inserting)
+DELETE FROM appointment;
+DELETE FROM document_requirement;
+DELETE FROM service_reason;
+DELETE FROM service_type;
+DELETE FROM appointment_slot;
+DELETE FROM service_type;
+DELETE FROM product;
+DELETE FROM service_category;
+
 -- 1. INSERT SERVICE CATEGORIES
 INSERT INTO service_category (name)
 SELECT v.name
@@ -87,8 +97,6 @@ WHERE NOT EXISTS (
 );
 
 -- 2. INSERT SERVICE TYPE
-DELETE FROM service_type;
-
 INSERT INTO service_type (product_id, name)
 SELECT p.product_id, v.service_type_name
 FROM (
@@ -120,7 +128,49 @@ WHERE NOT EXISTS (
       AND st.name = v.service_type_name
 );
 
-DELETE FROM service_reasons
+INSERT INTO document_requirement (service_type_id, document_name, description)
+SELECT st.service_type_id, v.document_name, v.description
+FROM (
+    VALUES
+        -- Life Cover - Claim Enquiry
+        ('Life Cover', 'Claim Enquiry', 'Deceased Death Certificate', 'Original or certified copy'),
+        ('Life Cover', 'Claim Enquiry', 'Client South African ID', 'Valid ID or passport'),
+        ('Life Cover', 'Claim Enquiry', 'BI Form', 'Completed beneficiary information form'),
+
+        -- Funeral Cover - Claim Enquiry
+        ('Funeral Cover', 'Claim Enquiry', 'Deceased Death Certificate', 'Original or certified copy'),
+        ('Funeral Cover', 'Claim Enquiry', 'Client South African ID', 'Valid ID or passport'),
+        ('Funeral Cover', 'Claim Enquiry', 'BI Form', 'Completed beneficiary information form'),
+
+        -- Credit Card - New Application
+        ('Credit Card', 'New Application', 'Latest Payslip', 'Proof of current employment and salary'),
+        ('Credit Card', 'New Application', 'Bank Statement (Non-Capitec Client)', 'Last 3 months bank statements'),
+        ('Credit Card', 'New Application', 'Employment Contract Letter', 'If employed contractually'),
+
+        -- Access Facility - New Application
+        ('Access Facility', 'New Application', 'Latest Payslip', 'Proof of current employment and salary'),
+        ('Access Facility', 'New Application', 'Bank Statement (Non-Capitec Client)', 'Last 3 months bank statements'),
+        ('Access Facility', 'New Application', 'Employment Contract Letter', 'If employed contractually'),
+
+        -- Personal Loan - New Application
+        ('Personal Loan', 'New Application', 'Latest Payslip', 'Proof of current employment and salary'),
+        ('Personal Loan', 'New Application', 'Bank Statement (Non-Capitec Client)', 'Last 3 months bank statements'),
+        ('Personal Loan', 'New Application', 'Employment Contract Letter', 'If employed contractually'),
+
+        -- Home Loan - New Application
+        ('Home Loan', 'New Application', 'Latest Payslip', 'Proof of current employment and salary'),
+        ('Home Loan', 'New Application', 'Bank Statement (Non-Capitec Client)', 'Last 3 months bank statements'),
+        ('Home Loan', 'New Application', 'Employment Contract Letter', 'If employed contractually'),
+        ('Home Loan', 'New Application', 'Property Valuation Report', 'Professional property valuation'),
+        ('Home Loan', 'New Application', 'Proof of Identity', 'Valid ID or passport copy')
+) AS v(product_name, service_type_name, document_name, description)
+    INNER JOIN product p ON p.name = v.product_name
+    INNER JOIN service_type st ON st.product_id = p.product_id AND st.name = v.service_type_name
+WHERE NOT EXISTS (
+    SELECT 1 FROM document_requirement dr
+    WHERE dr.service_type_id = st.service_type_id
+      AND dr.document_name = v.document_name
+);
 
 -- 5. APPOINTMENT SLOTS
 INSERT INTO appointment_slot
@@ -129,7 +179,7 @@ SELECT
     b.branch_id,
     (d.slot_date + t.slot_time)::timestamp,
     (d.slot_date + t.slot_time + INTERVAL '30 minutes')::timestamp,
-    1
+    5
 FROM branch b
          CROSS JOIN generate_series(
                 CURRENT_DATE,

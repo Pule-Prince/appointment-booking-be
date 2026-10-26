@@ -4,6 +4,7 @@ import com.project.capitec.booking.dto.request.CreateAppointmentRequest;
 import com.project.capitec.booking.dto.response.AppointmentResponse;
 import com.project.capitec.booking.dto.response.AppointmentSlotResponse;
 import com.project.capitec.booking.dto.response.CustomerResponse;
+import com.project.capitec.booking.dto.response.DocumentRequirementResponse;
 import com.project.capitec.booking.dto.response.ServiceReasonResponse;
 import com.project.capitec.booking.dto.response.ServiceTypeResponse;
 import com.project.capitec.booking.entity.Appointment;
@@ -96,7 +97,7 @@ public class AppointmentService {
         customer = customerRepository.save(customer);
 
         // 5. Create service reason from user input
-        ServiceReason serviceReason = new ServiceReason(null, serviceType, request.getServiceReason());
+        ServiceReason serviceReason = new ServiceReason(serviceType, request.getServiceReason());
         serviceReason = serviceReasonRepository.save(serviceReason);
 
         // 6. Generate unique reference number
@@ -192,6 +193,11 @@ public class AppointmentService {
             slotService.getBookedCount(appointment.getSlot().getId())
         );
 
+        List<DocumentRequirementResponse> requiredDocuments = appointment.getServiceType()
+            .getDocumentRequirements().stream()
+            .map(doc -> new DocumentRequirementResponse(doc.getId(), doc.getDocumentName(), doc.getDescription()))
+            .collect(Collectors.toList());
+
         return new AppointmentResponse(
             appointment.getId(),
             appointment.getReferenceNumber(),
@@ -201,7 +207,8 @@ public class AppointmentService {
             slotResponse,
             appointment.getStatus(),
             appointment.getCreatedAt(),
-            appointment.getUpdatedAt()
+            appointment.getUpdatedAt(),
+            requiredDocuments
         );
     }
 }

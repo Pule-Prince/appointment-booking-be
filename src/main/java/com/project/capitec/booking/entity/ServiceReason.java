@@ -28,8 +28,7 @@ public class ServiceReason {
 
     public ServiceReason() {}
 
-    public ServiceReason(Long id, ServiceType serviceType, String description) {
-        this.id = id;
+    public ServiceReason(ServiceType serviceType, String description) {
         this.serviceType = serviceType;
         this.description = description;
     }

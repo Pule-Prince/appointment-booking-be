@@ -1,6 +1,7 @@
 package com.project.capitec.booking.dto.response;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class AppointmentResponse {
     private Long appointmentId;
@@ -12,13 +13,14 @@ public class AppointmentResponse {
     private String status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private List<DocumentRequirementResponse> requiredDocuments;
 
     public AppointmentResponse() {}
 
     public AppointmentResponse(Long appointmentId, String referenceNumber, CustomerResponse customer,
                               ServiceTypeResponse serviceType, ServiceReasonResponse serviceReason,
                               AppointmentSlotResponse slot, String status, LocalDateTime createdAt,
-                              LocalDateTime updatedAt) {
+                              LocalDateTime updatedAt, List<DocumentRequirementResponse> requiredDocuments) {
         this.appointmentId = appointmentId;
         this.referenceNumber = referenceNumber;
         this.customer = customer;
@@ -28,6 +30,7 @@ public class AppointmentResponse {
         this.status = status;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.requiredDocuments = requiredDocuments;
     }
 
     public Long getAppointmentId() { return appointmentId; }
@@ -48,4 +51,6 @@ public class AppointmentResponse {
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+    public List<DocumentRequirementResponse> getRequiredDocuments() { return requiredDocuments; }
+    public void setRequiredDocuments(List<DocumentRequirementResponse> requiredDocuments) { this.requiredDocuments = requiredDocuments; }
 }

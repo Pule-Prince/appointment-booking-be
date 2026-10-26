@@ -12,7 +12,8 @@ spring:
   sql:
     init:
       mode: always
-      continue-on-error: true
+      continue-on-error: false
+      data-locations: classpath:data.sql
 
   jpa:
     hibernate:

@@ -31,6 +31,9 @@ public class ServiceType {
     @OneToMany(mappedBy = "serviceType", fetch = FetchType.EAGER)
     private List<ServiceReason> serviceReasons;
 
+    @OneToMany(mappedBy = "serviceType", fetch = FetchType.EAGER)
+    private List<DocumentRequirement> documentRequirements;
+
     public ServiceType() {}
 
     public ServiceType(Long id, Product product, String name) {
@@ -69,5 +72,13 @@ public class ServiceType {
 
     public void setServiceReasons(List<ServiceReason> serviceReasons) {
         this.serviceReasons = serviceReasons;
+    }
+
+    public List<DocumentRequirement> getDocumentRequirements() {
+        return documentRequirements;
+    }
+
+    public void setDocumentRequirements(List<DocumentRequirement> documentRequirements) {
+        this.documentRequirements = documentRequirements;
     }
 }

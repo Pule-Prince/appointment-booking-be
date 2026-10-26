@@ -34,7 +34,7 @@ public class DocumentGuidanceService {
         // Insure → Funeral Cover → Claim
         documentGuidance.put("INSURE_FUNERAL_CLAIM", List.of(
             new DocumentGuidanceResponse("Deceased's death certificate", true, "Official death certificate"),
-            new DocumentGuidanceResponse("Claimant's South African ID", true, "Valid SA ID of the person making the claim"),
+            new DocumentGuidanceResponse("Client South African ID", true, "Valid SA ID of the person making the claim"),
             new DocumentGuidanceResponse("BI Form", true, "Copy of the funeral policy")
         ));
 
