@@ -132,6 +132,6 @@ Separate Angular 19 repository. See Frontend README.md for setup.
 
 You can use DBeaver to connect to the PostgreSQL and run queries against the tables
 
-DB url: jdbc:postgresql://localhost:5432/booking
-DB username: postgres
-DB password: postgres
+**DB url: jdbc:postgresql://localhost:5432/booking**
+**DB username: postgres**
+**DB password: postgres**
