@@ -24,6 +24,14 @@ cd into the directory where you cloned the project
 
 ---
 
+## Maven Build
+
+```bash
+# Build Spring Boot project
+run this maven build: mvn clean compile
+
+```
+
 ## Run with Docker
 
 ### 1. Using Docker Compose 
