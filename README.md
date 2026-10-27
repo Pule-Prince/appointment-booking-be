@@ -33,18 +33,19 @@ cd into the directory where you cloned the project
 docker-compose -f docker-compose.yml up -d
 
 NB: You can also run the backend application by running the BookingApplication configuration on Intellij. You ensure the app container is stopped in Docker
-
-# Backend runs on: http://localhost:8080
-# Database: PostgreSQL on localhost:5432
 ```
+
+## Simulated Email Notification
+
+### Access MailHog to view emails
+
+http://localhost:8025/
 
 ## API Documentation (Swagger)
 
 ### Access Swagger UI
 
-```
 http://localhost:8080/swagger-ui.html
-```
 
 ### Key Endpoints
 
@@ -90,6 +91,7 @@ curl -X POST http://localhost:8080/api/appointments \
 - **Language:** Java 17
 - **Database:** PostgreSQL 16
 - **ORM:** Hibernate JPA
+- **Mailhog:** Simulate email notification
 - **Testing:** JUnit 5 + Mockito
 - **API Docs:** Swagger/OpenAPI 3.0
 - **Build:** Maven
