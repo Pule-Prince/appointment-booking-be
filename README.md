@@ -26,13 +26,24 @@ cd into the directory where you cloned the project
 
 ## Run with Docker
 
-### 1. Using Docker Compose (Recommended)
+### 1. Using Docker Compose 
 
 ```bash
 # Build and start all services (backend + database)
 docker-compose -f docker-compose.yml up -d
 
-NB: You can also run the backend application by running the BookingApplication configuration on Intellij. You ensure the app container is stopped in Docker
+# Stop all containers configured in docker-compose
+docker-compose -f docker-compose.yml stop
+
+# Remove all containers configured
+docker-compose -f docker-compose.yml down
+
+```
+### 2. Using IntelliJ
+```bash
+- Ensure the booking-postgres and booking-mailhog containers are running and booking-app is stopped
+
+- On Intellij run the BookingApplication configuration startup
 ```
 
 ## Simulated Email Notification
@@ -97,22 +108,6 @@ curl -X POST http://localhost:8080/api/appointments \
 - **Build:** Maven
 
 ---
-
-## Project Structure
-
-```
-src/main/java/com/project/capitec/booking/
-├── controller/          # REST endpoints
-├── service/            # Business logic
-├── entity/             # JPA entities
-├── repository/         # Data access
-├── dto/                # Request/Response DTOs
-└── builder/            # Builder patterns
-
-src/main/resources/
-├── application.yml     # Configuration
-└── import.sql          # Database initialization
-```
 
 ---
 
