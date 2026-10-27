@@ -123,4 +123,10 @@ Separate Angular 19 repository. See Frontend README.md for setup.
 
 <img width="1432" height="1362" alt="ERD drawio" src="https://github.com/user-attachments/assets/26c04d9e-93f1-4fd7-a808-a73d13cd0a1b" />
 
+# Database
 
+You can use DBeaver to connect to the PostgreSQL and run queries against the tables
+
+DB url: jdbc:postgresql://localhost:5432/booking
+DB username: postgres
+DB password: postgres

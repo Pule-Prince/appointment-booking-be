@@ -47,6 +47,8 @@ services:
       mailhog:
         condition: service_healthy
     restart: unless-stopped
+    healthcheck:
+      test: ["NONE"]
 
 volumes:
   postgres_data:
